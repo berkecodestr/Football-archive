@@ -3,6 +3,7 @@
 import { createContext, useCallback, useContext, useMemo, useReducer, type ReactNode } from 'react'
 import type { Achievement, Player } from '@/lib/types'
 
+// 1. Tipler
 export interface GameState {
   coins: number
   xp: number
@@ -36,36 +37,23 @@ interface GameContextValue {
   unlockAchievement: (id: string) => void
 }
 
-const initialState: GameState = {
-  coins: 100,
-  xp: 350,
-  level: 7,
-  collection: [],
-  activeClubFilter: null,
-  freePackClaimed: false,
-  dailyClaimed: false,
-  stats: {
-    drafts: 3,
-    championships: 1,
-    bestRating: 91,
-    highestChem: 86,
-    packsOpened: 4,
-    quizWins: 12,
-    quizAccuracy: 78,
-  },
-  achievements: [],
-  activeStadium: 'Camp Nou',
-  activeJersey: 'Brazil 2002',
-}
-
-const GameContext = createContext<GameContextValue | null>(null)
-
 type Action =
   | { type: 'ADD_COINS'; amount: number }
   | { type: 'SET_CLUB_FILTER'; club: string | null }
   | { type: 'ADD_XP'; amount: number }
   | { type: 'RECORD_DRAFT'; chem: number; rating: number }
   | { type: 'UNLOCK_ACHIEVEMENT'; id: string }
+
+// 2. Initial State
+const initialState: GameState = {
+  coins: 100, xp: 350, level: 7, collection: [],
+  activeClubFilter: null, freePackClaimed: false, dailyClaimed: false,
+  stats: { drafts: 3, championships: 1, bestRating: 91, highestChem: 86, packsOpened: 4, quizWins: 12, quizAccuracy: 78 },
+  achievements: [], activeStadium: 'Camp Nou', activeJersey: 'Brazil 2002',
+}
+
+// 3. Context ve Reducer
+const GameContext = createContext<GameContextValue | null>(null)
 
 function reducer(state: GameState, action: Action): GameState {
   switch (action.type) {
@@ -75,6 +63,7 @@ function reducer(state: GameState, action: Action): GameState {
   }
 }
 
+// 4. Provider
 export function GameProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState)
 
@@ -93,9 +82,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
   )
 }
 
+// 5. TEK VE GÜVENLİ EXPORT
 export const useGame = (): GameContextValue => {
   const context = useContext(GameContext)
-  
   if (!context) {
     return {
       state: initialState,
@@ -108,6 +97,5 @@ export const useGame = (): GameContextValue => {
       unlockAchievement: () => null
     }
   }
-  
   return context
 }
