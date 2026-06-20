@@ -4,6 +4,19 @@ import { Info } from 'lucide-react'
 import type { Player } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
+// Dil desteği sözlüğü (Bunu ayrı bir dosyadan da import edebilirsin)
+const t = (pos: string) => {
+  const translations: Record<string, string> = {
+    ST: 'Forvet', LW: 'Sol Kanat', RW: 'Sağ Kanat',
+    GK: 'Kaleci', CB: 'Stoper', LB: 'Sol Bek', RB: 'Sağ Bek',
+    CM: 'Orta Saha', CAM: 'Ofansif O.S', CDM: 'Defansif O.S',
+    LM: 'Sol O.S', RM: 'Sağ O.S', LWB: 'Sol Kanat Bek', RWB: 'Sağ Kanat Bek',
+    CF: 'Gizli Forvet'
+  }
+  // Eğer uygulama dili 'tr' ise bunu döndür, değilse orijinali döndür
+  return translations[pos] || pos 
+}
+
 const ERA_COLORS: Record<string, string> = {
   '70s': '#9a7b3f',
   '80s': '#b8860b',
@@ -21,12 +34,9 @@ interface Props {
   compact?: boolean
 }
 
-/**
- * Clean, realistic player tile for VIP Draft mode.
- * Intentionally NOT a FUT-style collectible card.
- */
 export function PlayerTile({ player, selected, onSelect, onInfo, compact }: Props) {
   const eraColor = ERA_COLORS[player.era] ?? '#d4af37'
+  
   return (
     <div
       onClick={onSelect}
@@ -41,8 +51,9 @@ export function PlayerTile({ player, selected, onSelect, onInfo, compact }: Prop
         <span className="text-lg font-black leading-none gold-gradient-text">
           {player.rating}
         </span>
+        {/* BURASI GÜNCELLENDİ: t(player.position) */}
         <span className="text-[9px] font-bold uppercase text-muted-foreground">
-          {player.position}
+          {t(player.position)} 
         </span>
       </div>
 
