@@ -1,11 +1,13 @@
 'use client'
 
 import Link from 'next/link'
+import { useRouter } from 'next/navigation' // Yönlendirme için eklendi
 import { Coins, Settings, Zap } from 'lucide-react'
 import { useGame } from '@/lib/game-store'
 
 export function TopBar() {
   const { state, xpProgress } = useGame()
+  const router = useRouter() // Router hook'u başlatıldı
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl">
@@ -41,13 +43,14 @@ export function TopBar() {
             </span>
           </div>
 
-          <Link
-            href="/profile"
+          {/* Ayarlar butonu güncellendi */}
+          <button
+            onClick={() => router.push('/settings')}
             className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-secondary text-muted-foreground transition-colors hover:text-foreground"
-            aria-label="Settings and profile"
+            aria-label="Settings"
           >
             <Settings className="h-4 w-4" />
-          </Link>
+          </button>
         </div>
       </div>
     </header>
