@@ -47,18 +47,18 @@ export function ModeCards() {
           >
             <Link
               href={m.href}
-              className="group relative flex items-center gap-4 overflow-hidden rounded-2xl glass p-4 transition-transform active:scale-[0.98]"
+              className="group relative flex items-center gap-4 overflow-hidden rounded-2xl glass backdrop-blur-xl p-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]"
             >
-              {/* 🔥 BACKGROUND GLOW (FIXED) */}
+              {/* 🔥 GLOW EFFECT (FIXED) */}
               <span
                 className={`pointer-events-none absolute -right-8 -top-10 h-32 w-32 rounded-full blur-2xl opacity-20 ${
                   isGold ? 'bg-yellow-500' : 'bg-emerald-400'
                 }`}
               />
 
-              {/* ICON */}
+              {/* ICON BOX */}
               <span
-                className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl ${
+                className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl shadow-md ${
                   isGold
                     ? 'glass-gold text-gold'
                     : 'border border-accent/30 bg-accent/10 text-neon'
