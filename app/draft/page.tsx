@@ -1,37 +1,33 @@
 'use client'
 
 import { AppShell } from '@/components/shell/app-shell'
-import { useGame } from '@/lib/game-store'
+import { SQUAD_POOLS } from '@/lib/data' // Senin verilerin
 import { useState } from 'react'
 
 export default function DraftPage() {
-  const { state, recordDraft } = useGame()
-  const [step, setStep] = useState(1) // 1: Diziliş, 2: Teknik Direktör, 3: Oyuncular
+  const [team, setTeam] = useState<any[]>([])
+  const pool = SQUAD_POOLS['Real Madrid 2017'] // Havuz
 
-  // Teknik Direktör Seçimini Düzeltme (2 kere dönme hatası için)
-  const handleManagerSelect = (managerName: string) => {
-    // Burada dispatch işlemini tek bir seferde yapıyoruz
-    recordDraft(85, 90) // Örnek değerler
-    setStep(3)
+  const pickPlayer = (player: any) => {
+    if (team.length < 11) setTeam([...team, player])
   }
 
   return (
     <AppShell>
-      {step === 1 && (
-        <div>
-          <h1 className="text-2xl font-black mb-4">Choose Formation</h1>
-          {/* Diziliş seçim butonların */}
-          <button onClick={() => setStep(2)} className="w-full p-4 bg-gold text-black font-black rounded-xl">Continue to Manager</button>
-        </div>
-      )}
-
-      {step === 2 && (
-        <div>
-          <h1 className="text-2xl font-black mb-4">Elite Manager</h1>
-          {/* Buradaki Re-roll butonunun 2 kere tetiklenmesini engelledik */}
-          <button onClick={() => handleManagerSelect('Manager A')} className="w-full p-4 bg-gold text-black font-black rounded-xl">Confirm</button>
-        </div>
-      )}
+      <h1 className="text-xl font-black mb-4">Draft: {team.length}/11</h1>
+      
+      <div className="grid gap-2">
+        {pool.map((p) => (
+          <button 
+            key={p.id} 
+            onClick={() => pickPlayer(p)}
+            className="flex justify-between p-4 glass rounded-xl hover:bg-gold/10"
+          >
+            <span>{p.name}</span>
+            <span className="text-gold font-bold">{p.rating}</span>
+          </button>
+        ))}
+      </div>
     </AppShell>
   )
 }
