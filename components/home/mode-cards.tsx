@@ -37,6 +37,7 @@ export function ModeCards() {
       {MODES.map((m, i) => {
         const Icon = m.icon
         const isGold = m.accent === 'gold'
+
         return (
           <motion.div
             key={m.href}
@@ -48,16 +49,25 @@ export function ModeCards() {
               href={m.href}
               className="group relative flex items-center gap-4 overflow-hidden rounded-2xl glass p-4 transition-transform active:scale-[0.98]"
             >
-              <span className="pointer-events-none absolute -right-8 -top-10 h-32 w-32 rounded-full opacity-20 blur-2xl"
-                style={{ background: isGold ? '#d4af37' : '#32ff9c' }}
+              {/* 🔥 BACKGROUND GLOW (FIXED) */}
+              <span
+                className={`pointer-events-none absolute -right-8 -top-10 h-32 w-32 rounded-full blur-2xl opacity-20 ${
+                  isGold ? 'bg-yellow-500' : 'bg-emerald-400'
+                }`}
               />
+
+              {/* ICON */}
               <span
                 className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl ${
-                  isGold ? 'glass-gold text-gold' : 'border border-accent/30 bg-accent/10 text-neon'
+                  isGold
+                    ? 'glass-gold text-gold'
+                    : 'border border-accent/30 bg-accent/10 text-neon'
                 }`}
               >
                 <Icon className="h-6 w-6" />
               </span>
+
+              {/* TEXT */}
               <div className="min-w-0 flex-1">
                 <span
                   className={`mb-1 inline-block rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest ${
@@ -66,11 +76,15 @@ export function ModeCards() {
                 >
                   {m.tag}
                 </span>
+
                 <h3 className="truncate text-base font-bold">{m.title}</h3>
+
                 <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">
                   {m.desc}
                 </p>
               </div>
+
+              {/* ARROW */}
               <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-1 group-hover:text-foreground" />
             </Link>
           </motion.div>
