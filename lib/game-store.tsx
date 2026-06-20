@@ -3,7 +3,6 @@
 import { createContext, useCallback, useContext, useMemo, useReducer, type ReactNode } from 'react'
 import type { Achievement, Player } from '@/lib/types'
 
-// İlgili tipler ve Initial State
 export interface GameState {
   coins: number
   xp: number
@@ -26,19 +25,16 @@ export interface GameState {
   activeJersey: string
 }
 
-// Context için değer tipi
 interface GameContextValue {
   state: GameState
   dispatch: React.Dispatch<Action>
   setClubFilter: (club: string | null) => void
   filteredPlayers: Player[]
-  xpProgress: number // Top-bar'da kullandığın için ekledim
+  xpProgress: number
   recordDraft: (chem: number, rating: number) => void
   addXp: (amount: number) => void
   unlockAchievement: (id: string) => void
 }
-
-const GameContext = createContext<GameContextValue | null>(null)
 
 const initialState: GameState = {
   coins: 100,
@@ -61,6 +57,8 @@ const initialState: GameState = {
   activeStadium: 'Camp Nou',
   activeJersey: 'Brazil 2002',
 }
+
+const GameContext = createContext<GameContextValue | null>(null)
 
 type Action =
   | { type: 'ADD_COINS'; amount: number }
@@ -85,7 +83,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   const recordDraft = useCallback((chem: number, rating: number) => dispatch({ type: 'RECORD_DRAFT', chem, rating }), [])
   const unlockAchievement = useCallback((id: string) => dispatch({ type: 'UNLOCK_ACHIEVEMENT', id }), [])
 
-  const filteredPlayers: Player[] = useMemo(() => [], []) // Buraya ALL_PLAYERS mantığını ekleyebilirsin
+  const filteredPlayers: Player[] = useMemo(() => [], []) 
   const xpProgress = Math.min((state.xp % 1000) / 10, 100)
 
   return (
@@ -95,18 +93,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
   )
 }
 
-// HATA ÇÖZÜMÜ: Hook'u burada tanımlayıp export ediyoruz
-export const useGame = () => {
+export const useGame = (): GameContextValue => {
   const context = useContext(GameContext)
-  if (!context) throw new Error('useGame must be used within a GameProvider')
-  return context
-}
-
-// lib/game-store.ts dosyanın en altına bunu yapıştır:
-
-export const useGame = () => {
-  const context = useContext(GameContext);
-  // Eğer context null ise (build sırasında olabilir), boş bir state döndür ki hata patlamasın
+  
   if (!context) {
     return {
       state: initialState,
@@ -117,7 +106,8 @@ export const useGame = () => {
       recordDraft: () => null,
       addXp: () => null,
       unlockAchievement: () => null
-    } as GameContextValue;
+    }
   }
-  return context;
-};
+  
+  return context
+}
