@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
@@ -18,13 +18,15 @@ export function DraftFlow() {
   const router = useRouter()
   const [matches, setMatches] = useState<SimMatch[]>([])
   const [settled, setSettled] = useState(false)
+  
+  // Re-roll döngüsünü engellemek için kilit mekanizması
+  const [isProcessing, setIsProcessing] = useState(false)
 
   const teamName = useMemo(() => {
     if (manager) return `${manager.flag} ${manager.name.split(" ").pop()} XI`
     return "Your XI"
   }, [manager])
 
-  // Build the tournament when entering the tournament phase
   if (phase === "tournament" && matches.length === 0) {
     setMatches(simulateTournament(stats.ovr, placed))
   }
@@ -64,7 +66,12 @@ export function DraftFlow() {
         transition={{ duration: 0.3 }}
       >
         {phase === "formation" && <FormationStep />}
-        {phase === "manager" && <ManagerStep />}
+        {phase === "manager" && (
+          <ManagerStep 
+            isProcessing={isProcessing} 
+            setIsProcessing={setIsProcessing} 
+          />
+        )}
         {phase === "squad" && <SquadStep />}
         {phase === "tournament" && (
           <TournamentStep matches={matches} teamName={teamName} onComplete={finishTournament} />
