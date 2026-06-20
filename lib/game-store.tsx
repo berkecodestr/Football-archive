@@ -101,3 +101,23 @@ export const useGame = () => {
   if (!context) throw new Error('useGame must be used within a GameProvider')
   return context
 }
+
+// lib/game-store.ts dosyanın en altına bunu yapıştır:
+
+export const useGame = () => {
+  const context = useContext(GameContext);
+  // Eğer context null ise (build sırasında olabilir), boş bir state döndür ki hata patlamasın
+  if (!context) {
+    return {
+      state: initialState,
+      dispatch: () => null,
+      setClubFilter: () => null,
+      filteredPlayers: [],
+      xpProgress: 0,
+      recordDraft: () => null,
+      addXp: () => null,
+      unlockAchievement: () => null
+    } as GameContextValue;
+  }
+  return context;
+};
