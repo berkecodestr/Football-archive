@@ -33,6 +33,10 @@ interface DraftContextValue {
   isComplete: boolean
   stats: SquadStats
   reset: () => void
+
+  // 🔥 NEW
+  selectedTeam: string | null
+  setSelectedTeam: (team: string | null) => void
 }
 
 const DraftContext = createContext<DraftContextValue | null>(null)
@@ -43,6 +47,9 @@ export function DraftProvider({ children }: { children: React.ReactNode }) {
   const [manager, setManager] = useState<Manager | null>(null)
   const [placed, setPlaced] = useState<PlacedPlayer[]>([])
   const [activeSlot, setActiveSlot] = useState<string | null>(null)
+
+  // 🔥 NEW
+  const [selectedTeam, setSelectedTeam] = useState<string | null>(null)
 
   const formation = getFormation(formationId)
 
@@ -82,6 +89,9 @@ export function DraftProvider({ children }: { children: React.ReactNode }) {
     setManager(null)
     setPlaced([])
     setActiveSlot(null)
+
+    // 🔥 reset team filter
+    setSelectedTeam(null)
   }, [])
 
   const value: DraftContextValue = {
@@ -99,9 +109,17 @@ export function DraftProvider({ children }: { children: React.ReactNode }) {
     isComplete,
     stats,
     reset,
+
+    // 🔥 NEW
+    selectedTeam,
+    setSelectedTeam,
   }
 
-  return <DraftContext.Provider value={value}>{children}</DraftContext.Provider>
+  return (
+    <DraftContext.Provider value={value}>
+      {children}
+    </DraftContext.Provider>
+  )
 }
 
 export function useDraft() {
